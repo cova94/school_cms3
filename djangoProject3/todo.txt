@@ -1,0 +1,71 @@
+Models:
+
+    Diploma: I think we should rename Diploma to Transcript.
+
+    Administrator:
+        We need to either add a model for an administrator. Or we can add a boolean field to the Teacher model that
+        could be named is_admin (which I think already exists but serves a different purpose.) or add in is_advisor so
+        that we can give each role a different set of permissions. We should try is_administrator, is_teacher, and
+        is_advisor for roles and rename the Teacher model to Staff.
+
+
+
+
+Views:
+
+    create_student:
+        just add the normal info and use either an internal or external api to validate the info that has been
+        submitted
+
+    manage_student:
+        view for both admins and students to update student information. The html template that is displayed should
+        adjust based on the authenticated user accessing the page.
+
+    delete_student:
+        standard deletion process. Student information should be archived in some way on deletion. Maybe export all
+        information as JSON to some backup or duplicate db table to backup db.
+
+    create_diploma:
+        This view will be used to create diploma object. This view might not be intended for use by anybody. Instead it
+        may just be used for backend query / db operations. Maybe the actual view can be admit_student which will
+        create a diploma and any other information that we would not want created until the student is registered and
+        eligible to take classes. When the create_diploma is being used we will create the StudentDiploma and the
+        StudentTerm objects for the student.
+
+    class_catalogue:
+        This will be a view that is available for a student who is looking to register for classes. It will allow any
+        student and possibly even admins to view the class_catalogue. This view should also contain a the Term object
+        that is attached for the term so that they can see all of the classes that they are currently taking.
+
+        This page should include pagination for about 15 classes by default, and should display classes by alphabetical
+        order.
+
+    class_list:
+        This view will display the home page for all of the classes being taken and will list the name of the
+        classes through the ClassroomStudent objects.
+
+    class_detail:
+        This view will show all of the required materials, syllabus and have links to assignments and grades.
+
+    class_assignments:
+        This will show all of the assignments for the class and will be default only show assignments that are not
+        submitted or are past due.
+
+    class_grades_list:
+        This view will query all of the submissions on the students model and add the points_scored from every
+        submission to the classroom student object. This view will then calculate the grade by dividing
+        total_points_scored / total_points_available. It will calculate this to two decimals and once it is done
+        it will also display this info along side the correlated Letter grade. This info will be cached so that it does
+        not have to be recalculated unless another assignment is submitted.
+
+    create_task:
+        This view will allow the teacher to access a form to create any type of task and also create questions and
+        answers or whatever material for said task.
+
+    complete_class:
+        This view will take a Classroom object and iterate through all of the ClassroomStudent objects contained in it.
+        As it iterates through each student it will retrieve the StudentCoreClass object that is attached to the
+        ClassroomStudent from the db and add the points_scored, points_available, calculated_grade, letter_grade to the
+        model.
+
+
